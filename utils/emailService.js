@@ -18,11 +18,11 @@ const transporter = nodemailer.createTransport({
 
 const sendVerificationEmail = async (toEmail, token, username) => {
   try {
-    const verificationUrl = `http://192.168.188.237:5000/api/auth/verify-email/${token}`;
+    const verificationUrl = `https://workitapp-production.up.railway.app/api/auth/verify-email/${token}`;
 // Note: Added '/api/auth' to match typical Express route structure
     
     await transporter.sendMail({
-      from: `"Your App Name" <${config.email.from}>`,
+      from: `"WorkIT" <${config.email.from}>`,
       to: toEmail,
       subject: 'Verify Your Email',
       html: `<p>Hello ${username},</p>
