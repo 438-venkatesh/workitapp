@@ -10,10 +10,10 @@ module.exports = {
       port: 587,
       secure: false,
       auth: {
-        user: 'n210438@rguktn.ac.in',
-        pass: 'miec nsnb xfdl geyu'
+        user: 'workitrgukt@gmail.com',
+        pass: 'rypk vatf vizn vyhn'
       },
-      from: 'n210438@rguktn.ac.in'
+      from: 'workitrgukt@gmail.com'
     }
   };
   
