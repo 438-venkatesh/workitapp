@@ -90,7 +90,10 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
-    const token = jwt.sign({ id: user._id }, config.jwt.secret, { expiresIn: '1h' });
+    
+    // Set token expiration to 7 days
+    const token = jwt.sign({ id: user._id }, config.jwt.secret, { expiresIn: '7d' });
+    
     res.json({
       token,
       user: {
