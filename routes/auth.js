@@ -10,28 +10,34 @@ router.post('/login', authController.login);
 router.get('/verify-email/:token', async (req, res) => {
   try {
     const { token } = req.params;
-    const response = await authController.verifyAndCreateUser(req, res);
-    
-    if (!res.headersSent) {
-      res.send(`
-        <style>
-          body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
-          .success { color: #4CAF50; font-size: 24px; }
-          .btn { 
-            display: inline-block; 
-            padding: 10px 20px; 
-            background-color: #3b82f6; 
-            color: white; 
-            text-decoration: none; 
-            border-radius: 5px;
-            margin-top: 20px;
-          }
-        </style>
-        <div class="success">✓ Email Verified Successfully</div>
-        <p>You can now log in to your account</p>
+    const result = await authController.verifyAndCreateUser(token);
+
+    if (result.alreadyVerified) {
+      return res.send(`
+        <h2>Email already verified</h2>
+        <p>You can log in directly</p>
         <a href="/login" class="btn">Go to Login</a>
       `);
     }
+
+    res.send(`
+      <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
+        .success { color: #4CAF50; font-size: 24px; }
+        .btn { 
+          display: inline-block; 
+          padding: 10px 20px; 
+          background-color: #3b82f6; 
+          color: white; 
+          text-decoration: none; 
+          border-radius: 5px;
+          margin-top: 20px;
+        }
+      </style>
+      <div class="success">✓ Email Verified Successfully</div>
+      <p>You can now log in to your account</p>
+      <a href="/login" class="btn">Go to Login</a>
+    `);
   } catch (error) {
     res.status(400).send(`
       <h1>Verification Failed</h1>
