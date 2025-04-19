@@ -87,6 +87,47 @@ router.post('/resend-verification', async (req, res) => {
     });
   }
 });
+
+// Add this new endpoint to handle verification completion
+router.post('/complete-registration', async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    // Verify the token
+    const decoded = jwt.verify(token, config.jwt.secret);
+    
+    // Check if user exists (temporary check)
+    const existingUser = await User.findOne({ email: decoded.email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+    
+    // Create and save the user
+    const user = new User({
+      username: decoded.username,
+      email: decoded.email,
+      password: decoded.password,
+      isVerified: true
+    });
+    
+    await user.save();
+    
+    // Generate auth token
+    const authToken = jwt.sign({ id: user._id }, config.jwt.secret, { expiresIn: '7d' });
+    
+    res.json({
+      token: authToken,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        isVerified: true
+      }
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 // Email Verification Route
 router.get('/verify-email/:token', async (req, res) => {
   try {
