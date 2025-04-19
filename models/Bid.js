@@ -5,7 +5,7 @@ const bidSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   publisherId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Publisher's ID
   bidAmount: { type: Number, required: true },
-  deliveryDays: { type: Number, required: true },
+  
   bidDescription: { type: String, required: true },
   status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
   freezed: { type: Boolean, default: false }, // New field
