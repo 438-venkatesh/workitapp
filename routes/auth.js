@@ -49,6 +49,53 @@ router.get('/verify-email/:token', async (req, res) => {
       </html>
     `);
   }
+});router.get('/verify-email/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+    const response = await authController.verifyAndCreateUser(req, res);
+    
+    if (!res.headersSent) {
+      res.send(`
+        <style>
+          body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
+          .success { color: #4CAF50; font-size: 24px; }
+          .btn { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            background-color: #3b82f6; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 5px;
+            margin-top: 20px;
+          }
+        </style>
+        <div class="success">✓ Email Verified Successfully</div>
+        <p>You can now log in to your account</p>
+        <a href="/login" class="btn">Go to Login</a>
+      `);
+    }
+  } catch (error) {
+    res.status(400).send(`
+      <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
+        .error { color: #ef4444; font-size: 24px; }
+        .btn { 
+          display: inline-block; 
+          padding: 10px 20px; 
+          background-color: #3b82f6; 
+          color: white; 
+          text-decoration: none; 
+          border-radius: 5px;
+          margin-top: 20px;
+        }
+      </style>
+      <div class="error">✗ Verification Failed</div>
+      <p>${error.message.includes('expired') ? 
+        'This verification link has expired.' : 
+        'This verification link is invalid.'}</p>
+      <a href="/resend-verification" class="btn">Get New Verification Email</a>
+    `);
+  }
 });
 // Resend verification email route
 router.post('/resend-verification', async (req, res) => {
