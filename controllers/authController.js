@@ -5,22 +5,16 @@ const jwt = require('jsonwebtoken');
 const register = async (req, res) => {
   const { username, email, password } = req.body;
   try {
-    // Create a temporary user object but don't save it yet
-    const tempUser = new User({ username, email, password });
-    
-    // Generate verification token
-    const verificationToken = jwt.sign(
-      { email: tempUser.email }, 
-      'your_jwt_secret', 
-      { expiresIn: '24h' }
-    );
-    
-    // Send verification email
-    await sendVerificationEmail(tempUser.email, verificationToken, tempUser.username);
-    
+    const user = new User({ username, email, password });
+    await user.save();
+    const token = jwt.sign({ id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
     res.status(201).json({
-      message: 'Verification email sent. Please verify your email to complete registration.',
-      email: tempUser.email
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email 
+      } 
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
