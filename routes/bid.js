@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/bids', async (req, res) => {
   const { bidId, userId, bidAmount, bidDescription ,publisherId} = req.body;
   try {
-    const bid = new Bid({ bidId, userId,publisherId, bidAmount, deliveryDays, bidDescription });
+    const bid = new Bid({ bidId, userId,publisherId, bidAmount,  bidDescription });
     await bid.save();
     res.status(201).json({ message: 'Bid submitted successfully', bid });
   } catch (error) {
