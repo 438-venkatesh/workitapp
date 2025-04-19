@@ -128,6 +128,28 @@ router.post('/complete-registration', async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+router.post('/check-verification', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({ 
+      isVerified: user.isVerified,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 // Email Verification Route
 router.get('/verify-email/:token', async (req, res) => {
   try {
