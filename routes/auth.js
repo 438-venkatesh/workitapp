@@ -77,25 +77,40 @@ router.get('/verify-email/:token', async (req, res) => {
     user.isVerified = true;
     await user.save();
 
-    // Send a success response
-    res.send(`
-      <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
-        .success { color: #4CAF50; font-size: 24px; }
-        .btn { 
-          display: inline-block; 
-          padding: 10px 20px; 
-          background-color: #3b82f6; 
-          color: white; 
-          text-decoration: none; 
-          border-radius: 5px;
-          margin-top: 20px;
-        }
-      </style>
-      <div class="success">✓ Email Verified Successfully</div>
-      <p>You can now log in to your account</p>
-      <a href="/login" class="btn">Go to Login</a>
-    `);
+   res.send(`
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
+    .success { color: #4CAF50; font-size: 24px; }
+    .btn { 
+      display: inline-block; 
+      padding: 10px 20px; 
+      background-color: #3b82f6; 
+      color: white; 
+      text-decoration: none; 
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .message {
+      margin-top: 20px;
+      color: #333;
+      font-size: 18px;
+      display: none;
+    }
+  </style>
+
+  <div class="success">✓ Email Verified Successfully</div>
+  <p>You can now log in to your account</p>
+  <a href="/login" class="btn" onclick="showMessage()">Go to Login</a>
+  <div id="extraMessage" class="message">Go to WorkIt App and login with your credentials</div>
+
+  <script>
+    function showMessage() {
+      document.getElementById('extraMessage').style.display = 'block';
+    }
+  </script>
+`);
+
 
   } catch (error) {
     console.error('Verification error:', error);
